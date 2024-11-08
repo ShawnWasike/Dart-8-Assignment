@@ -1,57 +1,74 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(EBankApp());
+  runApp(const EBankApp());
 }
 
 class EBankApp extends StatelessWidget {
+  const EBankApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'EBANK',
-      home: LoginPage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontSize: 22), 
+          bodyLarge: TextStyle(fontSize: 18), 
+          bodyMedium: TextStyle(fontSize: 16),
+        ),
+      ),
+      home: const LoginPage(),
     );
   }
 }
 
-// LoginPage to Dashboard transition
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('EBANK Login')),
+      appBar: AppBar(title: const Text('EBANK Login')),
       body: Center(
-        child: ElevatedButton(
+        child: CustomButton(
+          text: 'Go to Dashboard',
           onPressed: () {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => Dashboard(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                pageBuilder: (_, __, ___) => const Dashboard(),
+                transitionsBuilder: (_, animation, __, child) {
                   return FadeTransition(opacity: animation, child: child);
                 },
               ),
             );
           },
-          child: Text('Go to Dashboard'),
         ),
       ),
     );
   }
 }
 
-// Dashboard with Send Money page
 class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('EBANK Dashboard')),
-      body: SendMoneyPage(),
+      appBar: AppBar(title: const Text('EBANK Dashboard')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SendMoneyPage(),
+      ),
     );
   }
 }
 
 class SendMoneyPage extends StatefulWidget {
+  const SendMoneyPage({Key? key}) : super(key: key);
+
   @override
   _SendMoneyPageState createState() => _SendMoneyPageState();
 }
@@ -67,7 +84,6 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -75,33 +91,30 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
           children: [
             Text(
               'Send Money',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
-            TextFormField(
+            const SizedBox(height: 20),
+            CustomTextField(
               controller: _recipientController,
-              decoration: InputDecoration(labelText: 'Recipient Name'),
+              label: 'Recipient Name',
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the recipient name';
-                }
+                if (value == null || value.isEmpty) return 'Please enter the recipient name';
                 return null;
               },
             ),
-            SizedBox(height: 16),
-            TextFormField(
+            const SizedBox(height: 16),
+            CustomTextField(
               controller: _amountController,
-              decoration: InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.number,
+              label: 'Amount',
               validator: (value) {
                 if (value == null || value.isEmpty || double.tryParse(value)! <= 0) {
-                  return 'Please enter a valid positive amount';
+                  return 'Please enter a positive amount';
                 }
                 return null;
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: _selectedPaymentMethod,
               items: ['Bank Transfer', 'Mobile Money', 'Credit Card']
@@ -115,14 +128,14 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                   _selectedPaymentMethod = value;
                 });
               },
-              decoration: InputDecoration(labelText: 'Payment Method'),
+              decoration: const InputDecoration(labelText: 'Payment Method'),
               validator: (value) => value == null ? 'Please select a payment method' : null,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Mark as Favorite'),
+                const Text('Mark as Favorite'),
                 Switch(
                   value: _isFavorite,
                   onChanged: (value) {
@@ -133,7 +146,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             CustomButton(
               text: 'Send Money',
               onPressed: () {
@@ -144,11 +157,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                 }
               },
             ),
-            SizedBox(height: 20),
             AnimatedOpacity(
               opacity: _showSuccessMessage ? 1.0 : 0.0,
-              duration: Duration(seconds: 1),
-              child: Text(
+              duration: const Duration(seconds: 1),
+              child: const Text(
                 'Transaction Successful!',
                 style: TextStyle(color: Colors.green, fontSize: 18),
                 textAlign: TextAlign.center,
@@ -161,23 +173,44 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
   }
 }
 
-// Reusable CustomButton Widget
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  CustomButton({required this.text, required this.onPressed});
+  const CustomButton({Key? key, required this.text, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        textStyle: TextStyle(fontSize: 16),
-        backgroundColor: Colors.blue, // Consistent color scheme
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        textStyle: const TextStyle(fontSize: 16),
+        backgroundColor: Colors.blue,
       ),
       onPressed: onPressed,
       child: Text(text),
+    );
+  }
+}
+
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final String? Function(String?) validator;
+
+  const CustomTextField({
+    Key? key,
+    required this.controller,
+    required this.label,
+    required this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(labelText: label),
+      validator: validator,
     );
   }
 }
