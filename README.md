@@ -1,4 +1,4 @@
-# simple_ui_app
+# EBANK
 
 A new Flutter project.
 
