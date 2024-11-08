@@ -1,16 +1,3 @@
 # EBANK
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The **EBANK** mobile banking app, built with Flutter, features a simple, user-friendly interface where users can send money effortlessly. Starting from a login page with smooth transitions, users are directed to a dashboard with a **Send Money** form. This form includes fields for the recipient's name, amount, and payment method, with built-in validation to ensure correct inputs, as well as a favorite toggle switch. Custom widgets are used for buttons and text fields to keep the design consistent. After completing a transaction, a success message appears with a subtle fade-in animation, enhancing the user experience. The app’s cohesive styling and structured code ensure a professional and maintainable design.
